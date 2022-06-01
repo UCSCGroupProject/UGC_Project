@@ -1,5 +1,5 @@
 # Architecture
-Application is build by following Microservice architecture with REST APIs. 
+Application is build by following Microservice architecture with REST APIs.  
 Backend developed using Springboot + MySQL.  
 Frontend developed using React + Bootstrap.  
 Backend has each individual services that are bind to REST Api layer (controller classes).  
