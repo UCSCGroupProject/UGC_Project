@@ -1,0 +1,28 @@
+/* Fonts load to index CSS */
+@import url("./fonts/fonts_loader.css");
+
+:root {
+  /* Fonts */
+  --ff-poppins-black: "Poppins-Black";
+  --ff-poppins-black_italic: "Poppins-BlackItalic";
+  --ff-poppins-bold: "Poppins-Bold";
+  --ff-poppins-bold_italic: "Poppins-BoldItalic";
+  --ff-poppins-extra_bold: "Poppins-ExtraBold";
+  --ff-poppins-extra_bold_italic: "Poppins-ExtraBoldItalic";
+  --ff-poppins-extra_light: "Poppins-ExtraLight";
+  --ff-poppins-extra_light_italic: "Poppins-ExtraLightItalic";
+  --ff-poppins-italic: "Poppins-Italic";
+  --ff-poppins-light: "Poppins-Light";
+  --ff-poppins-light_italic: "Poppins-LightItalic";
+  --ff-poppins-medium: "Poppins-Medium";
+  --ff-poppins-medium_italic: "Poppins-MediumItalic";
+  --ff-poppins-regular: "Poppins-Regular";
+  --ff-poppins-semi_bold: "Poppins-SemiBold";
+  --ff-poppins-semi_bold_italic: "Poppins-SemiBoldItalic";
+  --ff-poppins-thin: "Poppins-Thin";
+  --ff-poppins-thin_italic: "Poppins-ThinItalic";
+}
+
+.title {
+  font-family: var(--ff-poppins-black);
+}
