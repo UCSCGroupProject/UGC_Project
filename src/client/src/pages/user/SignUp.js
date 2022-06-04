@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 
-import LoginForm from "../../components/Forms/LoginForm";
+import SignUpForm from "../../components/Forms/SignUpForm";
 
-export default class Login extends Component {
+export default class SignUp extends Component {
   render() {
     return (
       <div className="container my-3">
         <div className="row justify-content-center">
           <div className="col-4">
-            <div className="fs-1 text-center">Login</div>
+            <div className="fs-1 text-center">Sign Up</div>
             <div className="lead text-center">Plese enter your credentials</div>
             <hr />
 
-            <LoginForm />
+            <SignUpForm />
           </div>
         </div>
       </div>
