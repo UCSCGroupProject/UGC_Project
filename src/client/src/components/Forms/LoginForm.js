@@ -1,153 +1,153 @@
-import React, { Component } from "react";
-
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
+import React from "react";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import authService from "../../services/authService";
 
-const v_required = (value) => {
-  if (!value) {
-    return (
-      <div className="text-danger small my-1" role="alert">
-        This field is required
-      </div>
-    );
-  }
+const v_email = (val) => {
+  const EMAIL_REGEX = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+
+  return EMAIL_REGEX.test(val);
 };
 
-export default class LoginForm extends Component {
-  constructor(props) {
-    super(props);
+const v_required = (val) => {
+  if (!val) return false;
+  else return true;
+};
 
-    this.handleLogin = this.handleLogin.bind(this);
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
+function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [emailError, setEmailError] = useState("");
 
-    this.state = {
-      username: "",
-      password: "",
-      loading: false,
-      message: "",
-    };
-  }
+  const [password, setPassword] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [passwordError, setPasswordError] = useState("");
 
-  onChangeUsername(e) {
-    this.setState({ username: e.target.value });
-  }
+  const [loading, setLoading] = useState(false);
+  const [resMessage, setResMessage] = useState("");
 
-  onChangePassword(e) {
-    this.setState({ password: e.target.value });
-  }
+  let history = useHistory();
 
-  handleLogin(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    this.setState({
-      message: "",
-      loading: true,
-    });
+    // init
+    setIsEmailValid(true);
+    setEmailError("");
+    setIsPasswordValid(true);
+    setPasswordError("");
 
-    this.form.validateAll();
-
-    if (this.checkBtn.context._errors.length === 0) {
-      authService.login(this.state.username, this.state.password).then(
-        () => {
-          // Navigate to profile page
-          console.log(this.props.history);
-          this.props.history.push("/");
-          window.location.reload();
-        },
-        (error) => {
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          this.setState({
-            loading: false,
-            message: resMessage,
-          });
-        }
-      );
-    } else {
-      this.setState({
-        loading: false,
-      });
+    if (!v_required(email)) {
+      setIsEmailValid(false);
+      setEmailError("Email can not be empty.");
     }
-  }
 
-  render() {
-    return (
-      <div>
-        <Form
-          onSubmit={this.handleLogin}
-          ref={(c) => {
-            this.form = c;
-          }}
-        >
-          {!this.state.successful && (
-            <div>
-              <div className="form-group mb-2">
-                <label htmlFor="username" className="form-label">
-                  Username
-                </label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="username"
-                  value={this.state.username}
-                  onChange={this.onChangeUsername}
-                  validations={[v_required]}
-                />
-              </div>
+    if (!v_email(email)) {
+      setIsEmailValid(false);
+      setEmailError("Enter a valid email.");
+    }
 
-              <div className="form-group mb-4">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
-                <Input
-                  type="text"
-                  className="form-control"
-                  name="password"
-                  value={this.state.password}
-                  onChange={this.onChangePassword}
-                  validations={[v_required]}
-                />
-              </div>
+    if (!v_required(password)) {
+      setIsPasswordValid(false);
+      setPasswordError("Password can not be empty.");
+    }
 
-              <div className="form-group">
-                <button
-                  className="btn btn-primary btn-block w-100 p-3"
-                  disabled={this.state.loading}
-                >
-                  Login
-                  {this.state.loading && (
-                    <span className="spinner-border spinner-border-sm"></span>
-                  )}
-                </button>
-              </div>
-            </div>
-          )}
+    if (!isEmailValid || !isPasswordValid) {
+      return;
+    }
 
-          {this.state.message && (
-            <div className="form-group mt-3">
-              <div className="alert alert-danger" role="alert">
-                <div className="text-center">{this.state.message}</div>
-              </div>
-            </div>
-          )}
+    // all valid then submit
+    // loading
+    setLoading(true);
+    setResMessage("");
 
-          <CheckButton
-            style={{ display: "none" }}
-            ref={(c) => {
-              this.checkBtn = c;
-            }}
-          />
-        </Form>
-      </div>
+    authService.login(email, password).then(
+      () => {
+        history.push("/");
+        window.location.reload();
+      },
+      (error) => {
+        const res =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setResMessage(res);
+
+        // loading
+        setLoading(false);
+      }
     );
-  }
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        {/* email */}
+        <div className="form-group">
+          <label htmlFor="emailInput" className="form-label">
+            Email
+          </label>
+          <input
+            type="text"
+            className={
+              isEmailValid ? "form-control" : "form-control is-invalid"
+            }
+            id="emailInput"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <div className={isEmailValid ? "valid-feedback" : "invalid-feedback"}>
+            {emailError}
+          </div>
+        </div>
+
+        {/* password */}
+        <div className="form-group">
+          <label htmlFor="passwordInput" className="form-label">
+            Password
+          </label>
+          <input
+            type="password"
+            className={
+              isPasswordValid ? "form-control" : "form-control is-invalid"
+            }
+            id="passwordInput"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div
+            className={isPasswordValid ? "valid-feedback" : "invalid-feedback"}
+          >
+            {passwordError}
+          </div>
+        </div>
+
+        <div className="form-group">
+          <button
+            className="btn btn-primary btn-block w-100 p-2"
+            disabled={loading}
+          >
+            Login
+            {loading && (
+              <span className="spinner-border spinner-border-sm"></span>
+            )}
+          </button>
+        </div>
+
+        {resMessage && (
+          <div className="form-group mt-3">
+            <div className="alert alert-danger" role="alert">
+              <div className="text-center">{resMessage}</div>
+            </div>
+          </div>
+        )}
+      </form>
+    </div>
+  );
 }
+
+export default LoginForm;
