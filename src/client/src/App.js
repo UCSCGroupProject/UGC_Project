@@ -7,7 +7,6 @@ import Login from "./pages/user/Login";
 import SignUp from "./pages/user/SignUp";
 import Home from "./pages/Home";
 
-
 function App() {
   return (
     <Router>

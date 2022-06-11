@@ -2,18 +2,9 @@ import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
+import { v_email, v_required } from "../../utils/validator";
+
 import authService from "../../services/authService";
-
-const v_email = (val) => {
-  const EMAIL_REGEX = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
-
-  return EMAIL_REGEX.test(val);
-};
-
-const v_required = (val) => {
-  if (!val) return false;
-  else return true;
-};
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -86,65 +77,71 @@ function LoginForm() {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        {/* email */}
-        <div className="form-group">
-          <label htmlFor="emailInput" className="form-label">
-            Email
-          </label>
-          <input
-            type="text"
-            className={
-              isEmailValid ? "form-control" : "form-control is-invalid"
-            }
-            id="emailInput"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <div className={isEmailValid ? "valid-feedback" : "invalid-feedback"}>
-            {emailError}
-          </div>
-        </div>
-
-        {/* password */}
-        <div className="form-group">
-          <label htmlFor="passwordInput" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className={
-              isPasswordValid ? "form-control" : "form-control is-invalid"
-            }
-            id="passwordInput"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <div
-            className={isPasswordValid ? "valid-feedback" : "invalid-feedback"}
-          >
-            {passwordError}
-          </div>
-        </div>
-
-        <div className="form-group">
-          <button
-            className="btn btn-primary btn-block w-100 p-2"
-            disabled={loading}
-          >
-            Login
-            {loading && (
-              <span className="spinner-border spinner-border-sm"></span>
-            )}
-          </button>
-        </div>
-
-        {resMessage && (
-          <div className="form-group mt-3">
-            <div className="alert alert-danger" role="alert">
-              <div className="text-center">{resMessage}</div>
+        <div className="row g-3">
+          {/* email */}
+          <div className="form-group">
+            <label htmlFor="emailInput" className="form-label">
+              Email
+            </label>
+            <input
+              type="text"
+              className={
+                isEmailValid ? "form-control" : "form-control is-invalid"
+              }
+              id="emailInput"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <div
+              className={isEmailValid ? "valid-feedback" : "invalid-feedback"}
+            >
+              {emailError}
             </div>
           </div>
-        )}
+
+          {/* password */}
+          <div className="form-group">
+            <label htmlFor="passwordInput" className="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              className={
+                isPasswordValid ? "form-control" : "form-control is-invalid"
+              }
+              id="passwordInput"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <div
+              className={
+                isPasswordValid ? "valid-feedback" : "invalid-feedback"
+              }
+            >
+              {passwordError}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <button
+              className="btn btn-primary btn-block w-100 p-2"
+              disabled={loading}
+            >
+              Login
+              {loading && (
+                <span className="spinner-border spinner-border-sm"></span>
+              )}
+            </button>
+          </div>
+
+          {resMessage && (
+            <div className="form-group mt-3">
+              <div className="alert alert-danger" role="alert">
+                <div className="text-center">{resMessage}</div>
+              </div>
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );
